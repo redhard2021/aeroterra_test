@@ -9,7 +9,8 @@ Atención: Antes de iniciar el proyecto, leer la sección "Issues" del repositor
 <br>
 3.- Seleccione el IDE que normalmente utiliza.
 <br>
-4.-![image](https://github.com/redhard2021/aeroterra_test/assets/84198330/d6fafe5b-aac8-4d1e-8097-54d6bb374077)
+4.- Cliquee en "Run" (puede variar el lugar dependiendo el IDE utilizado) y espere a que se le abra el navegador <br>
+![image](https://github.com/redhard2021/aeroterra_test/assets/84198330/d6fafe5b-aac8-4d1e-8097-54d6bb374077)
 <br>
-Cliquee en "Run" (puede variar dependiendo el IDE utilizado) y espere a que se le abra el navegador
+
 
