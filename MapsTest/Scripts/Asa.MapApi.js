@@ -7,7 +7,7 @@ mapApp.getPOIs = function (callback) {
     $.get("../api/pois", function (data) {
         console.log(data)
         if (callback) callback(data.pois);
-    });
+    })
 }
 
 
@@ -46,7 +46,6 @@ mapApp.initMap = function (callback) {
 
 mapApp.initMap(function () {
     mapApp.getPOIs(function (pois) {
-        //console.log(pois);
         require(["esri/graphic", "esri/geometry/Point", "esri/geometry/webMercatorUtils", "dojo/domReady!"],
             function (Graphic, Point, webMercatorUtils) {
                 pois.forEach(function (poiData) {
@@ -64,6 +63,23 @@ function formValidation() {
     saveInputsData();
 }
 
+function getCategories() {
+    fetch('../api/Categories')
+        .then(response => response.json())
+        .then(data => completeCategoriesDataOnForm(data))
+        .catch(err => console.log(err))
+}
+
+function completeCategoriesDataOnForm(data) {
+    var categoryField = document.getElementById("categories");
+
+    for (let category of data.categories) {
+        let option = document.createElement("option")
+        option.text = category.Value
+        categoryField.add(option)
+    }
+}
+
 function saveInputsData() {
     var inputName = document.getElementById("inputName");
     var address = document.getElementById("address");
@@ -74,22 +90,17 @@ function saveInputsData() {
 }
 
 function validateInputsData(inputName, address, phone, coords) {
-    if (inputName.value.trimStart() < 1 || address.value.trimStart() < 1 || phone.value.trimStart() < 1) 
-    {
+    if (inputName.value.trimStart() < 1 || address.value.trimStart() < 1 || phone.value.trimStart() < 1) {
         document.getElementById("errorLabel").innerHTML = "Todos los campos son requeridos";
-    }
-    else if(coordsHaveError(coords.value))
-    {
+    } else if (coordsHaveError(coords.value)) {
         document.getElementById("errorLabel").innerHTML = "Los valores posibles para las coordenadas son: <br> Longitud -180 < x < 180 y Latitud -90 < y < 90 separados por coma";
-    } 
-    else 
-    {
+    } else {
         clearAllInputsAndErrors();
         $('#formModal').modal('hide');
     }
 }
 
-function clearAllInputsAndErrors(){
+function clearAllInputsAndErrors() {
     document.getElementById("errorLabel").innerHTML = "";
     inputName.value = "";
     address.value = "";
@@ -97,7 +108,7 @@ function clearAllInputsAndErrors(){
     coords.value = "";
 }
 
-function coordsHaveError(cords){
+function coordsHaveError(cords) {
     var splittedCords = cords.split(',');
     return !(splittedCords[0] < 180 && splittedCords[0] > -180
         && splittedCords[1] < 90 && splittedCords[1] > -90);

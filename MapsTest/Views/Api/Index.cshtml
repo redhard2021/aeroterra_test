@@ -7,7 +7,7 @@
         height: 100%;
         background-color: #a9a9a9
 ">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" style="float: left; position: absolute; margin: 20px 100px; z-index: 1500;">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" onclick="getCategories()" style="float: left; position: absolute; margin: 20px 100px; z-index: 1500;">
         Agregar POI
     </button>
 
@@ -33,11 +33,7 @@
                         </div>
                         <div class="form-group">
                             <label for="categories">Categoría</label>
-                            <select id="categories" class="form-control">
-                                <option selected>Comercial</option>
-                                <option>Residencial</option>
-                                <option>Mixta</option>
-                            </select>
+                            <select id="categories" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="coords">Coordenadas *</label>

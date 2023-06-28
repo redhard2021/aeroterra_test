@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.OleDb;
-using System.Dynamic;
-using System.IO;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using Asa.DataStore;
+using Asa.MapApi.Data;
 
 namespace Asa.MapApi.Controllers
 {
     public class ApiController : Controller
     {
+        DbContext dbContext = new DbContext("ds.xls");
+        
         // GET: Api
         public ActionResult Index()
         {
@@ -25,7 +20,10 @@ namespace Asa.MapApi.Controllers
             switch (Request.HttpMethod)
             {
                 case "GET":
-                    return Json(new { categories = new string[0] }, JsonRequestBehavior.AllowGet);
+                    List<object> categories = new List<object>();
+                    categories = dbContext.GetData("Categories");
+                    
+                    return Json(new { categories = categories.ToArray() }, JsonRequestBehavior.AllowGet);
                     
             }
 
@@ -54,7 +52,7 @@ namespace Asa.MapApi.Controllers
             {
                 case "GET":
                     List<object> _POIs = new List<object>();
-                    _POIs = _ListPOIS();
+                    _POIs = dbContext.GetData("POIs");
                         
                     return Json(new { pois = _POIs.ToArray() }, JsonRequestBehavior.AllowGet);
                 case "POST":
@@ -70,30 +68,6 @@ namespace Asa.MapApi.Controllers
 
             Response.StatusCode = 400;
             return Json(new { error = "Method not suported." }, JsonRequestBehavior.AllowGet);
-        }
-
-        
-        private List<Object> _ListPOIS()
-        {
-            XlsDriver driver = new XlsDriver();
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "ds.xls");
-            OleDbConnection conn = driver.Connect(path);
-            conn.Open();
-            DataTable dt = driver.ListData(conn, "POIs");
-
-            List<object> data = new List<Object>();
-            foreach (DataRow row in dt.Rows)
-            {
-                IDictionary<string, object> props = new Dictionary<string, object>();
-                foreach (DataColumn col in dt.Columns)
-                {
-                    props.Add(col.ColumnName.Replace(" ", "").Replace("(", "").Replace(")", ""), row[col.Ordinal]);
-                }
-                
-                data.Add(props);
-            }
-            conn.Close();
-            return data;
         }
     }
 }
