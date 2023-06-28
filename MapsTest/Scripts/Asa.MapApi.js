@@ -22,7 +22,7 @@ mapApp.initMap = function (callback) {
             zoom: 13
         });
 
-        mapApp.POIsLayer = new GraphicsLayer({ id: "circles" });
+        mapApp.POIsLayer = new GraphicsLayer({ id: "crosses" });
         mapApp.map.addLayer(mapApp.POIsLayer);
         mapApp.POIsSymbol = new SimpleMarkerSymbol({
                 "color": [230, 76, 0, 150],
