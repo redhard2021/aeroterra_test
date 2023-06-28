@@ -26,12 +26,12 @@ mapApp.initMap = function (callback) {
         mapApp.map.addLayer(mapApp.POIsLayer);
         mapApp.POIsSymbol = new SimpleMarkerSymbol({
                 "color": [230, 76, 0, 150],
-                "size": 12,
+                "size": 20,
                 "angle": -30,
                 "xoffset": 0,
                 "yoffset": 0,
                 "type": "esriSMS",
-                "style": "esriSMSCircle",
+                "style": "esriSMSCross",
                 "outline": {
                     "color": [168, 0, 0, 255],
                     "width": 1,
