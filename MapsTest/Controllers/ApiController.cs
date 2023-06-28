@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.OleDb;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -51,9 +53,9 @@ namespace Asa.MapApi.Controllers
             switch (Request.HttpMethod)
             {
                 case "GET":
-                    var _POIs = new List<Dictionary<string, object>>();
-                    this._ListPOIS();
-
+                    List<object> _POIs = new List<object>();
+                    _POIs = _ListPOIS();
+                        
                     return Json(new { pois = _POIs.ToArray() }, JsonRequestBehavior.AllowGet);
                 case "POST":
                     //InsertPOI (entity)
@@ -73,13 +75,13 @@ namespace Asa.MapApi.Controllers
         
         private List<Object> _ListPOIS()
         {
-            var driver = new XlsDriver();
-            var conn = driver.Connect(@"C:\Users\Entrevista\Documents\Visual Studio 2015\Projects\MapsTest\MapsTest\bin\Data\ds.xls");
+            XlsDriver driver = new XlsDriver();
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "ds.xls");
+            OleDbConnection conn = driver.Connect(path);
             conn.Open();
-            var dt = driver.ListData(conn, "POIs");
+            DataTable dt = driver.ListData(conn, "POIs");
 
-
-            var data = new List<Object>();
+            List<object> data = new List<Object>();
             foreach (DataRow row in dt.Rows)
             {
                 IDictionary<string, object> props = new Dictionary<string, object>();
@@ -89,7 +91,6 @@ namespace Asa.MapApi.Controllers
                 }
                 
                 data.Add(props);
-                return data;
             }
             conn.Close();
             return data;
