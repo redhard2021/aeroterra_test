@@ -1,6 +1,6 @@
 ﻿// https://developers.arcgis.com/javascript/3/jsapi/
 var mapApp = {
-    map : undefined
+    map: undefined
 }
 
 mapApp.getPOIs = function (callback) {
@@ -14,17 +14,17 @@ mapApp.getPOIs = function (callback) {
 mapApp.initMap = function (callback) {
     mapApp.map;
 
-    require(["esri/map", "esri/symbols/SimpleMarkerSymbol",  "esri/layers/GraphicsLayer", "dojo/domReady!"],
+    require(["esri/map", "esri/symbols/SimpleMarkerSymbol", "esri/layers/GraphicsLayer", "dojo/domReady!"],
         function (Map, SimpleMarkerSymbol, GraphicsLayer) {
-        mapApp.map = new Map("map", {
-            basemap: "topo",  //For full list of pre-defined basemaps, navigate to http://arcg.is/1JVo6Wd
-            center: [-58.3724715, -34.595986], // longitude, latitude
-            zoom: 13
-        });
+            mapApp.map = new Map("map", {
+                basemap: "topo",  //For full list of pre-defined basemaps, navigate to http://arcg.is/1JVo6Wd
+                center: [-58.3724715, -34.595986], // longitude, latitude
+                zoom: 13
+            });
 
-        mapApp.POIsLayer = new GraphicsLayer({ id: "crosses" });
-        mapApp.map.addLayer(mapApp.POIsLayer);
-        mapApp.POIsSymbol = new SimpleMarkerSymbol({
+            mapApp.POIsLayer = new GraphicsLayer({id: "crosses"});
+            mapApp.map.addLayer(mapApp.POIsLayer);
+            mapApp.POIsSymbol = new SimpleMarkerSymbol({
                 "color": [230, 76, 0, 150],
                 "size": 20,
                 "angle": -30,
@@ -39,9 +39,9 @@ mapApp.initMap = function (callback) {
                     "style": "esriSLSSolid"
                 }
             });
-        
-        if (callback) callback();
-    });
+
+            if (callback) callback();
+        });
 }
 
 mapApp.initMap(function () {
@@ -54,7 +54,51 @@ mapApp.initMap(function () {
                     var poi = new Point(coors[0], coors[1], mapApp.map.spatialReference)
                     mapApp.POIsLayer.add(new Graphic(poi, mapApp.POIsSymbol, poiData));
                 })
-                
+
             });
     });
 });
+
+function formValidation() {
+    event.preventDefault();
+    saveInputsData();
+}
+
+function saveInputsData() {
+    var inputName = document.getElementById("inputName");
+    var address = document.getElementById("address");
+    var phone = document.getElementById("phone");
+    var coords = document.getElementById("coords");
+
+    validateInputsData(inputName, address, phone, coords);
+}
+
+function validateInputsData(inputName, address, phone, coords) {
+    if (inputName.value.trimStart() < 1 || address.value.trimStart() < 1 || phone.value.trimStart() < 1) 
+    {
+        document.getElementById("errorLabel").innerHTML = "Todos los campos son requeridos";
+    }
+    else if(coordsHaveError(coords.value))
+    {
+        document.getElementById("errorLabel").innerHTML = "Los valores posibles para las coordenadas son: <br> Longitud -180 < x < 180 y Latitud -90 < y < 90 separados por coma";
+    } 
+    else 
+    {
+        clearAllInputsAndErrors();
+        $('#formModal').modal('hide');
+    }
+}
+
+function clearAllInputsAndErrors(){
+    document.getElementById("errorLabel").innerHTML = "";
+    inputName.value = "";
+    address.value = "";
+    phone.value = "";
+    coords.value = "";
+}
+
+function coordsHaveError(cords){
+    var splittedCords = cords.split(',');
+    return !(splittedCords[0] < 180 && splittedCords[0] > -180
+        && splittedCords[1] < 90 && splittedCords[1] > -90);
+}

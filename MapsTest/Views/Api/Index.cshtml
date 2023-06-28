@@ -2,42 +2,69 @@
     ViewBag.Title = "Map Demo";
 }
 
-
-    <div id="map" style="
+<div id="map" style="
         width: 100%;
         height: 100%;
         background-color: #a9a9a9
 ">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" style="float: left; position: absolute; margin: 20px 100px; z-index: 1500;">
-            Agregar POI
-        </button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" style="float: left; position: absolute; margin: 20px 100px; z-index: 1500;">
+        Agregar POI
+    </button>
 
-        <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary">Guardar</button>
-                    </div>
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title" id="exampleModalLabel">Agregar nuevo Punto de Interés</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="inputName">Nombre</label>
+                            <input class="form-control" id="inputName" placeholder="AEROTERRA S.A.">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Dirección</label>
+                            <input class="form-control" id="address" placeholder="Av. Eduardo Madero 1020, C1001 CABA">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Teléfono</label>
+                            <input type="number" class="form-control" id="phone" placeholder="54 9 11 5272 0900">
+                        </div>
+                        <div class="form-group">
+                            <label for="categories">Categoría</label>
+                            <select id="categories" class="form-control">
+                                <option selected>Comercial</option>
+                                <option>Residencial</option>
+                                <option>Mixta</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="coords">Coordenadas</label>
+                            <input class="form-control" id="coords" placeholder="-34.595986,-58.3724715">
+                        </div>
+                        <div class="mt-4 mb-4 text-center">
+                            <div>
+                                <label class="text-danger" id="errorLabel"></label>
+                            </div>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" onclick="formValidation()">Guardar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-
-
+</div>
 
 
 @section scripts {
     <script src="https://js.arcgis.com/3.31/"></script>
     <script type="text/javascript" src="~/Scripts/Asa.MapApi.js"></script>
 
+    <style>
+        input, select{
+            max-width: 530px;
+        }
+    </style>
 }
