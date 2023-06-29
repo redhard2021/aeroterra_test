@@ -1,5 +1,6 @@
 # README
 Atención: Antes de iniciar el proyecto, leer la sección "Issues" del repositorio.
+Los challenges completos son del 1 al 3. Sin poder completar con exito el challenge.
 
 # Pasos a seguir para probar la aplicación:
 1.- Descargue el repositorio. <br>
