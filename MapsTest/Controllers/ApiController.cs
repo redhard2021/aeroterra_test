@@ -34,10 +34,8 @@ namespace Asa.MapApi.Controllers
 
         public ActionResult ValidateForm(string id, Dictionary<string, object> entity)
         {
-            
             if (Request.HttpMethod == "POST")
             {
-                // entity <-- inbound
                 return Json(new { entity = entity, isvalid = false, errors = new string[] {"Message"} }, JsonRequestBehavior.AllowGet);
             }
 
@@ -56,8 +54,7 @@ namespace Asa.MapApi.Controllers
                         
                     return Json(new { pois = _POIs.ToArray() }, JsonRequestBehavior.AllowGet);
                 case "POST":
-                    //InsertPOI (entity)
-                    break;
+                    //return Json(new { }, JsonRequestBehavior.AllowGet);
                 case "PUT":
                     //UpdatePOI (id, entity)
                     break;

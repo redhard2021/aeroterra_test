@@ -53,30 +53,38 @@ mapApp.initMap(function () {
                     var poi = new Point(coors[0], coors[1], mapApp.map.spatialReference)
                     mapApp.POIsLayer.add(new Graphic(poi, mapApp.POIsSymbol, poiData));
                 })
-
             });
     });
 });
+
+isLoaded = false;
+
+function loadCategories() {
+    fetch('../api/categories')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            completeCategoriesDataOnForm(data)
+        })
+        .catch(err => console.error(err))
+}
 
 function formValidation() {
     event.preventDefault();
     saveInputsData();
 }
 
-function getCategories() {
-    fetch('../api/Categories')
-        .then(response => response.json())
-        .then(data => completeCategoriesDataOnForm(data))
-        .catch(err => console.log(err))
-}
-
 function completeCategoriesDataOnForm(data) {
     var categoryField = document.getElementById("categories");
 
-    for (let category of data.categories) {
-        let option = document.createElement("option")
-        option.text = category.Value
-        categoryField.add(option)
+    if (!isLoaded) {
+        for (let category of data.categories) {
+            let option = document.createElement("option")
+            option.value = category.Id
+            option.text = category.Value
+            categoryField.add(option)
+        }
+        isLoaded = true;
     }
 }
 
@@ -85,19 +93,51 @@ function saveInputsData() {
     var address = document.getElementById("address");
     var phone = document.getElementById("phone");
     var coords = document.getElementById("coords");
+    var category = document.getElementById("categories");
 
-    validateInputsData(inputName, address, phone, coords);
+    validateInputsData(inputName, address, phone, coords, category);
 }
 
-function validateInputsData(inputName, address, phone, coords) {
+function validateInputsData(inputName, address, phone, coords, category) {
     if (inputName.value.trimStart() < 1 || address.value.trimStart() < 1 || phone.value.trimStart() < 1) {
         document.getElementById("errorLabel").innerHTML = "Todos los campos son requeridos";
     } else if (coordsHaveError(coords.value)) {
         document.getElementById("errorLabel").innerHTML = "Los valores posibles para las coordenadas son: <br> Longitud -180 < x < 180 y Latitud -90 < y < 90 separados por coma";
     } else {
+        let poi = createNewPoi(inputName.value, address.value, phone.value, category.value, coords.value)
+        saveNewPoi(poi);
         clearAllInputsAndErrors();
         $('#formModal').modal('hide');
     }
+}
+
+function createNewPoi(inputName, address, phone, category, coords) {
+    var splittedCoords = coords.split(',');
+    var entity = JSON.stringify({
+        "entity": {
+            "Id": "",
+            "Name": name.value,
+            "Address": address.value,
+            "Phone": phone.value,
+            "XLon": splittedCoords[0].replace('.', ','),
+            "YLat": splittedCoords[1].replace('.', ','),
+            "Category": category.value
+        }
+    })
+    return entity;
+}
+
+// Challenge failed
+function saveNewPoi(poi) {
+    fetch('../api/ValidateForm', {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(poi),
+    }).then(response => response.json())
+        .catch(err => console.error("Error trying to add a new POI" + err))
 }
 
 function clearAllInputsAndErrors() {
@@ -109,7 +149,7 @@ function clearAllInputsAndErrors() {
 }
 
 function coordsHaveError(cords) {
-    var splittedCords = cords.split(',');
-    return !(splittedCords[0] < 180 && splittedCords[0] > -180
-        && splittedCords[1] < 90 && splittedCords[1] > -90);
+    var splittedCoords = cords.split(',');
+    return !(splittedCoords[0] < 180 && splittedCoords[0] > -180
+        && splittedCoords[1] < 90 && splittedCoords[1] > -90);
 }
